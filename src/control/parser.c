@@ -86,8 +86,7 @@ void parser_exec(Parser* parser, RegFile* regfile){
 }
 
 void exec_RType(uint32_t instruction, RegFile* registers){
-    uint8_t funct7 = instruction & 0xfe000000;
-    uint8_t rs2    = instruction & 0xf8;
+
 }
 
 void exec_IALU (uint32_t instruction, RegFile* registers){
