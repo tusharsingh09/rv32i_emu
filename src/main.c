@@ -20,7 +20,12 @@ typedef struct {
 
 void core_run(Core* core, Parser* parser, uint32_t clock_freq);
 
-inline int core_step(Core* core){ core->program_counter++; return 0; }
+int core_step(Core* core){ 
+    core->program_counter++;
+    log_registers(&core->regs);
+    return 0;
+}
+
 inline int core_jump(Core* core, uint32_t addr) { core->program_counter = addr; return 0; }
 
 int main(int argc, char** argv){
