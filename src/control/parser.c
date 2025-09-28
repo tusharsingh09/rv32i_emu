@@ -23,35 +23,36 @@ inline void nop(void){
 }
 
 void parser_set_mask(Parser* parser){
-    uint8_t opcode = parser->instrucion&0x3f;
+    uint8_t opcode = parser->instrucion&0x7f;
     uint8_t* mask = &parser->instruction_mask;
 
     uint32_t params[5];
 
     switch(opcode){
-        case R:
+        case 0b0110011: // RTYPE
             *mask = 0x0;
             break;
-        case I_ALU:
+        case 0b0010011: // I_ALU
             *mask = 0x1;
             break;
-        case I_LOAD:
+        case 0b0000011: // I_LOAD
             *mask = 0x2;
             break;
-        case S:
+        case 0b0100011: // STYPE
             *mask = 0x3;
             break;
-        case B:
+        case 0b1100011: // BRANCH
             *mask = 0x4;
             break;
-        case J:
+        case 0b1101111: // JUMP
             *mask = 0x5;
             break;
-        case U:
+        case 0b0110111: // UTYPE
             *mask = 0x6;
             break;
         default:
-            *mask = I_ALU;
+            puts("Unknown instruction opcode\n");
+            exit(EXIT_FAILURE);
             break;
     }
 }
@@ -61,12 +62,15 @@ void parser_exec(Parser* parser, RegFile* regfile){
     switch(*mask){
         case R:
             exec_RType(parser->instrucion, regfile);
+            puts("Exec RType\n");
             break;
         case I_ALU:
             exec_IALU(parser->instrucion, regfile);
+            puts("Exec IALU\n");
             break;
         case I_LOAD:
             exec_ILOAD(parser->instrucion, regfile);
+            puts("Exec ILOAD\n");
             break;
         case S:
             exec_S(parser->instrucion, regfile);
@@ -140,7 +144,6 @@ void exec_IALU (uint32_t instruction, RegFile* registers){
     switch(funct3){
         case(0x0):
             registers->registers[rd] = registers->registers[rs1] + imm; // ADDI
-            puts("ADDI\n");
             break;
         case(0x4):
             registers->registers[rd] = registers->registers[rs1] ^ imm; // XORI

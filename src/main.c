@@ -70,21 +70,19 @@ void core_run(Core* core, Parser* parser, uint32_t clock_freq){
             // fetch instruction
             parser->instrucion = core->instr->memory[core->program_counter];
 #if defined(DEBUG)
-            printf("%x : %x\n", core->program_counter, parser->instrucion);
+            printf("%x : %x\n", core->program_counter, parser->instrucion&0x7f);
 #endif
             // execution of instruction
             parser_set_mask(parser);
-            parser_exec(parser, &core->regs);
+            parser_exec(parser, &(core->regs));
 
             // increase pc
             core_step(core);
 
             // handle branch
         }
-
 #if defined(DEBUG)
         if(core->program_counter == 0xff) return;
 #endif
-
     }
 }
