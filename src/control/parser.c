@@ -89,15 +89,13 @@ void parser_exec(Parser* parser, RegFile* regfile){
     }
 }
 
+// Works like a charm
 void exec_RType(uint32_t instruction, RegFile* registers){
-    uint32_t funct7 = instruction&0xfe000000;
-    uint32_t rs2    = instruction&0x01f00000; // addr in reg file
-    uint32_t rs1    = instruction&0x000f8000; // addr in reg file
-    uint32_t funct3 = instruction&0x00007000;
-    uint32_t rd     = instruction&0x00000f80; // addr in reg file
-    // uint8_t opcode = instruction&0x0000007f;
-
-    printf("rd: %d\n", rd);
+    uint32_t funct7 = (instruction&0xfe000000)>>25;
+    uint32_t rs2    = (instruction&0x01f00000)>>20; // addr in reg file
+    uint32_t rs1    = (instruction&0x000f8000)>>15; // addr in reg file
+    uint32_t funct3 = (instruction&0x00007000)>>12;
+    uint32_t rd     = (instruction&0x00000f80)>>7; // addr in reg file
 
     switch(funct3){
         case(0x0):{
@@ -137,15 +135,12 @@ void exec_RType(uint32_t instruction, RegFile* registers){
     }
 }
 
+// Also works like a charm
 void exec_IALU (uint32_t instruction, RegFile* registers){
     uint16_t  imm    = ((uint32_t)(instruction&0xfff00000))>>20;
-    printf("imm: %d\n", imm);
     uint8_t   rs1    = ((uint32_t)(instruction&0x000f8000))>>15; // add in reg file
-    printf("rs1: %d\n", rs1);
     uint8_t  funct3 = (instruction&0x00007000)>>12;
-    printf("funct3: %d\n", funct3);
     uint32_t  rd     = (instruction&0x00000f80)>>7; // addr in reg file(uint8_t)
-    printf("rd: %d\n", rd);
 
     switch(funct3){
         case(0x0):
