@@ -181,17 +181,19 @@ void exec_ILOAD(uint32_t instruction, RegFile* registers){
     uint8_t  funct3 = (instruction&0x00007000)>>12;
     uint32_t  rd     = (instruction&0x00000f80)>>7; // addr in reg file(uint8_t)
 
+    int32_t temp;
+
     switch(funct3){
         case(0x0):
-            int32_t temp = memory.mem[imm+registers->registers[rs1]] & 0xff;
+            temp = memory.mem[imm+registers->registers[rs1]] & 0xff;
             registers->registers[rd] = temp;
             break;
         case(0x1):
-            int32_t temp = memory.mem[imm+registers->registers[rs1]] & 0xffff;
+            temp = memory.mem[imm+registers->registers[rs1]] & 0xffff;
             registers->registers[rd] = temp;
             break;
         case(0x2):
-            int32_t temp = memory.mem[imm+registers->registers[rs1]];
+            temp = memory.mem[imm+registers->registers[rs1]];
             registers->registers[rd] = temp;
             break;
         case(0x4):
@@ -207,8 +209,12 @@ void exec_ILOAD(uint32_t instruction, RegFile* registers){
 
 // needs memory region first
 void exec_S    (uint32_t instruction, RegFile* registers){
-    uint32_t imm   = (instruction&0xfe000f80)>>7;
+    uint32_t imm   = (instruction&0xfe000f80);
     // to join imm[11:5] and imm[4:0]
+    uint8_t imm_chop1 = (imm&0xf80)>>7;
+    uint16_t imm_chop2 = (imm&0xfe000000)>>20;
+    imm = (imm_chop2 | (uint16_t)imm_chop1);
+    printf("imm: %d\n", imm);
 
     uint8_t rs2    = instruction;
     uint8_t rs1    = instruction;
