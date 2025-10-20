@@ -7,6 +7,7 @@
 #include "reg_file.h"
 
 #include "control/parser.h"
+#include "memory/memory.h"
 
 #define DEBUG
 

@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "../reg_file.h"
+#include "../memory/memory.h"
 
 typedef struct {
     uint32_t instrucion;

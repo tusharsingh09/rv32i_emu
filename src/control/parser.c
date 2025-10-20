@@ -1,5 +1,7 @@
 #include "parser.h"
 
+static Memory memory;
+
 typedef enum {
     R = 0x0,
     I_ALU,
@@ -174,17 +176,50 @@ void exec_IALU (uint32_t instruction, RegFile* registers){
 }
 
 void exec_ILOAD(uint32_t instruction, RegFile* registers){
-    uint32_t imm   = instruction;
-    uint8_t rs2    = instruction;
-    uint8_t rd     = instruction;
-    uint8_t funct3 = instruction;
+    uint16_t  imm    = ((uint32_t)(instruction&0xfff00000))>>20;
+    uint8_t   rs1    = ((uint32_t)(instruction&0x000f8000))>>15; // add in reg file
+    uint8_t  funct3 = (instruction&0x00007000)>>12;
+    uint32_t  rd     = (instruction&0x00000f80)>>7; // addr in reg file(uint8_t)
+
+    switch(funct3){
+        case(0x0):
+            int32_t temp = memory.mem[imm+registers->registers[rs1]] & 0xff;
+            registers->registers[rd] = temp;
+            break;
+        case(0x1):
+            int32_t temp = memory.mem[imm+registers->registers[rs1]] & 0xffff;
+            registers->registers[rd] = temp;
+            break;
+        case(0x2):
+            int32_t temp = memory.mem[imm+registers->registers[rs1]];
+            registers->registers[rd] = temp;
+            break;
+        case(0x4):
+            registers->registers[rd] = memory.mem[imm+registers->registers[rs1]] & 0xff;
+            break;
+        case(0x5):
+            registers->registers[rd] = memory.mem[imm+registers->registers[rs1]] & 0xffff; 
+            break;
+        default:
+            nop();
+    }
 }
 
+// needs memory region first
 void exec_S    (uint32_t instruction, RegFile* registers){
-    uint32_t imm   = instruction;
+    uint32_t imm   = (instruction&0xfe000f80)>>7;
+    // to join imm[11:5] and imm[4:0]
+
     uint8_t rs2    = instruction;
     uint8_t rs1    = instruction;
     uint8_t funct3 = instruction;
+
+    switch(funct3){
+        case(0x0):
+            break;
+        default:
+            nop();
+    }
 }
 
 void exec_B    (uint32_t instruction, RegFile* registers){
