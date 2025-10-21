@@ -1,6 +1,6 @@
 #include "parser.h"
 
-static Memory memory;
+Memory memory;
 
 typedef enum {
     R = 0x0,
@@ -76,6 +76,7 @@ void parser_exec(Parser* parser, RegFile* regfile){
             break;
         case S:
             exec_S(parser->instrucion, regfile);
+            printf("Exec S\n");
             break;
         case B:
             exec_B(parser->instrucion, regfile);
@@ -214,18 +215,25 @@ void exec_S    (uint32_t instruction, RegFile* registers){
     uint8_t imm_chop1 = (imm&0xf80)>>7;
     uint16_t imm_chop2 = (imm&0xfe000000)>>20;
     imm = (imm_chop2 | (uint16_t)imm_chop1);
-    printf("imm: %d\n", imm);
 
-    uint8_t rs2    = instruction;
-    uint8_t rs1    = instruction;
-    uint8_t funct3 = instruction;
+    uint8_t rs2    = (instruction&0x01f00000)>>20;
+    uint8_t rs1    = (instruction&0xf8000)>>15;
+    uint8_t funct3 = (instruction&0x7000)>>12;
 
     switch(funct3){
-        case(0x0):
+        case(0x0): // sb
+            memory.mem[registers->registers[rs1]+imm] = registers->registers[rs2]&0xff;
+            break;
+        case(0x1): // sh
+            memory.mem[registers->registers[rs1]+imm] = registers->registers[rs2]&0xffff;
+            break;
+        case(0x2): // sw
+            memory.mem[registers->registers[rs1]+imm] = registers->registers[rs2]&0xffffffff;
             break;
         default:
             nop();
     }
+    mem_log(&memory);
 }
 
 void exec_B    (uint32_t instruction, RegFile* registers){

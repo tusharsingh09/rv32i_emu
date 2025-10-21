@@ -19,6 +19,9 @@ typedef struct {
     uint8_t instr_mask;
 } Core;
 
+extern Memory memory;
+extern void mem_clear(Memory* const mem);
+
 void core_run(Core* core, Parser* parser, uint32_t clock_freq);
 
 int core_step(Core* core){ 
@@ -49,6 +52,7 @@ int main(int argc, char** argv){
 #endif
 
     reg_clear(&core.regs);
+    mem_clear(&memory);
 
     if(!core.dram | !core.instr) {
         perror("Failed to allocate DRAM/InstructionMemory\n");

@@ -12,7 +12,7 @@ uint32_t reg_file_read(RegFile* file, uint8_t addr){
     return file->registers[addr];
 }
 
-void log_registers(RegFile* file){
+void log_registers(const RegFile* const file){
     char buff[10];
     FILE* f;
     f = fopen("register_data.txt", "w");

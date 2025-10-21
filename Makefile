@@ -1,7 +1,7 @@
 all: compile run
 
 compile:
-	gcc src/*.c src/control/*.c -o cpu -Wall -O3
+	gcc src/*.c src/control/*.c src/memory/*.c -o cpu -Wall -O3
 
 run:
 	cpu

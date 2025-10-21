@@ -20,4 +20,7 @@ inline uint32_t mem_read(Memory* mem, uint16_t addr){
     return mem->mem[addr];
 }
 
+void mem_log(const Memory* const mem);
+void mem_clear(Memory* const mem);
+
 #endif // MEMORY_H

@@ -12,6 +12,6 @@ typedef struct {
 void reg_clear(RegFile* file);
 void reg_write(RegFile* file, uint8_t addr, uint32_t data);
 uint32_t reg_read(RegFile* file, uint8_t addr);
-void log_registers(RegFile* file);
+void log_registers(const RegFile* const file);
 
 #endif // REG_FILE_H
